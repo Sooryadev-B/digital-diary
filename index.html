@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakura Diary 🌸</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sakura-petals"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🌸 Sakura Diary 🌸</h1>
+            <p class="subtitle">Your personal space for thoughts and memories</p>
+        </header>
+        
+        <div class="diary-card">
+            <div class="diary-header">
+                <div class="date-display" id="currentDate"></div>
+                <div class="page-info" id="pageInfo">Page 1 of 1</div>
+            </div>
+            
+            <div class="diary-content">
+                <input type="text" id="entryTitle" class="entry-title" placeholder="Entry Title...">
+                <textarea id="entryText" class="entry-text" placeholder="Write your thoughts here..."></textarea>
+            </div>
+            
+            <div class="diary-footer">
+                <div class="controls">
+                    <button id="prevBtn" class="btn btn-nav" disabled>
+                        <span>←</span> Previous
+                    </button>
+                    <button id="nextBtn" class="btn btn-nav" disabled>
+                        Next <span>→</span>
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <button id="addPageBtn" class="btn btn-add">+ New Entry</button>
+                    <button id="deletePageBtn" class="btn btn-delete" disabled>🗑 Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

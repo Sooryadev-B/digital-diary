@@ -1,0 +1,287 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd4e8 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Sakura petals animation */
+.sakura-petals {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+        radial-gradient(circle, #ffb3d9 2px, transparent 2px),
+        radial-gradient(circle, #ffc9e3 1.5px, transparent 1.5px),
+        radial-gradient(circle, #ffd4e8 2.5px, transparent 2.5px);
+    background-size: 200px 200px, 300px 300px, 250px 250px;
+    background-position: 0 0, 50px 50px, 100px 100px;
+    opacity: 0.3;
+    animation: sakuraFall 20s linear infinite;
+}
+
+@keyframes sakuraFall {
+    0% {
+        background-position: 0 0, 50px 50px, 100px 100px;
+    }
+    100% {
+        background-position: 0 200px, 50px 250px, 100px 300px;
+    }
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-in;
+}
+
+header h1 {
+    color: #d63384;
+    font-size: 3em;
+    text-shadow: 2px 2px 4px rgba(214, 51, 132, 0.2);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #c2185b;
+    font-size: 1.1em;
+    font-style: italic;
+}
+
+.diary-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(214, 51, 132, 0.2);
+    padding: 30px;
+    animation: slideUp 0.8s ease-out;
+    border: 3px solid #ffb3d9;
+}
+
+.diary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ffe0f0;
+}
+
+.date-display {
+    font-size: 1.1em;
+    color: #d63384;
+    font-weight: 600;
+}
+
+.page-info {
+    font-size: 0.95em;
+    color: #c2185b;
+    background: #ffe0f0;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.diary-content {
+    margin-bottom: 25px;
+}
+
+.entry-title {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ffe0f0;
+    padding: 15px;
+    font-size: 1.5em;
+    color: #d63384;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.3s;
+    background: transparent;
+}
+
+.entry-title:focus {
+    border-bottom-color: #ffb3d9;
+}
+
+.entry-title::placeholder {
+    color: #ffb3d9;
+}
+
+.entry-text {
+    width: 100%;
+    min-height: 300px;
+    border: none;
+    padding: 20px 15px;
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.8;
+    resize: vertical;
+    outline: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: transparent;
+}
+
+.entry-text::placeholder {
+    color: #ffb3d9;
+    font-style: italic;
+}
+
+.diary-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-nav {
+    background: linear-gradient(135deg, #ffb3d9, #ffc9e3);
+    color: white;
+    flex: 1;
+}
+
+.btn-add {
+    background: linear-gradient(135deg, #d63384, #c2185b);
+    color: white;
+    flex: 1;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #ff6b9d, #ff4081);
+    color: white;
+    flex: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .subtitle {
+        font-size: 0.95em;
+    }
+    
+    .diary-card {
+        padding: 20px;
+    }
+    
+    .diary-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .entry-title {
+        font-size: 1.2em;
+    }
+    
+    .entry-text {
+        min-height: 250px;
+        font-size: 1em;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+    
+    .diary-card {
+        padding: 15px;
+    }
+    
+    .entry-text {
+        min-height: 200px;
+    }
+}
