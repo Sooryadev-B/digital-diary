@@ -14,6 +14,18 @@ const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const addPageBtn = document.getElementById('addPageBtn');
 const deletePageBtn = document.getElementById('deletePageBtn');
+const searchInput = document.getElementById('searchInput');
+const clearSearchBtn = document.getElementById('clearSearchBtn');
+const exportBtn = document.getElementById('exportBtn');
+const exportMenu = document.getElementById('exportMenu');
+const exportTxtBtn = document.getElementById('exportTxtBtn');
+const exportJsonBtn = document.getElementById('exportJsonBtn');
+const togglePreviewBtn = document.getElementById('togglePreviewBtn');
+const previewEl = document.getElementById('preview');
+
+// Search state
+let filteredEntries = [];
+let isSearching = false;
 
 // Get formatted date
 function getFormattedDate() {
@@ -86,11 +98,12 @@ function updateUI() {
     currentDateEl.textContent = getFormattedDate();
     
     // Update page info
-    pageInfoEl.textContent = `Page ${currentPage} of ${entries.length}`;
+    const totalPages = isSearching ? filteredEntries.length : entries.length;
+    pageInfoEl.textContent = `Page ${currentPage} of ${totalPages}`;
     
     // Update button states
     prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === entries.length;
+    nextBtn.disabled = currentPage === totalPages;
     deletePageBtn.disabled = entries.length === 1;
 }
 
@@ -105,7 +118,8 @@ function goToPreviousPage() {
 
 // Navigate to next page
 function goToNextPage() {
-    if (currentPage < entries.length) {
+    const totalPages = isSearching ? filteredEntries.length : entries.length;
+    if (currentPage < totalPages) {
         saveCurrentEntry();
         currentPage++;
         displayCurrentEntry();
@@ -167,6 +181,27 @@ prevBtn.addEventListener('click', goToPreviousPage);
 nextBtn.addEventListener('click', goToNextPage);
 addPageBtn.addEventListener('click', addNewEntry);
 deletePageBtn.addEventListener('click', deleteCurrentEntry);
+searchInput.addEventListener('input', (e) => performSearch(e.target.value));
+clearSearchBtn.addEventListener('click', clearSearch);
+exportBtn.addEventListener('click', toggleExportMenu);
+exportTxtBtn.addEventListener('click', exportAsTxt);
+exportJsonBtn.addEventListener('click', exportAsJson);
+togglePreviewBtn.addEventListener('click', togglePreview);
+
+// Toolbar buttons
+document.querySelectorAll('.toolbar-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        insertMarkdown(btn.dataset.format);
+    });
+});
+
+// Close export menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!exportBtn.contains(e.target) && !exportMenu.contains(e.target)) {
+        exportMenu.style.display = 'none';
+    }
+});
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
@@ -188,6 +223,185 @@ document.addEventListener('keydown', (e) => {
         addNewEntry();
     }
 });
+
+// Search functionality
+function performSearch(query) {
+    if (!query.trim()) {
+        isSearching = false;
+        filteredEntries = [];
+        clearSearchBtn.style.display = 'none';
+        currentPage = 1;
+        displayCurrentEntry();
+        return;
+    }
+    
+    isSearching = true;
+    clearSearchBtn.style.display = 'block';
+    
+    const lowerQuery = query.toLowerCase();
+    filteredEntries = entries.filter((entry, index) => {
+        const titleMatch = entry.title.toLowerCase().includes(lowerQuery);
+        const dateMatch = new Date(entry.date).toLocaleDateString().includes(lowerQuery);
+        
+        if (titleMatch || dateMatch) {
+            entry.originalIndex = index;
+            return true;
+        }
+        return false;
+    });
+    
+    currentPage = 1;
+    displayCurrentEntry();
+}
+
+function clearSearch() {
+    searchInput.value = '';
+    isSearching = false;
+    filteredEntries = [];
+    clearSearchBtn.style.display = 'none';
+    currentPage = 1;
+    displayCurrentEntry();
+}
+
+// Display current entry (updated for search)
+function displayCurrentEntryOriginal() {
+    const entry = entries[currentPage - 1];
+    
+    if (entry) {
+        entryTitleEl.value = entry.title || '';
+        entryTextEl.value = entry.text || '';
+    }
+    
+    updateUI();
+}
+
+// Override display function to handle search
+function displayCurrentEntry() {
+    let entry;
+    
+    if (isSearching && filteredEntries.length > 0) {
+        entry = filteredEntries[currentPage - 1];
+    } else if (isSearching && filteredEntries.length === 0) {
+        entryTitleEl.value = '';
+        entryTextEl.value = 'No entries found matching your search.';
+        entryTitleEl.disabled = true;
+        entryTextEl.disabled = true;
+        updateUI();
+        return;
+    } else {
+        entry = entries[currentPage - 1];
+    }
+    
+    if (entry) {
+        entryTitleEl.value = entry.title || '';
+        entryTextEl.value = entry.text || '';
+        entryTitleEl.disabled = false;
+        entryTextEl.disabled = false;
+    }
+    
+    updateUI();
+}
+
+// Markdown rendering
+function renderMarkdown(text) {
+    let html = text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/\n/g, '<br>');
+    
+    if (html.includes('<li>')) {
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    }
+    
+    return html;
+}
+
+function togglePreview() {
+    const isPreviewVisible = previewEl.style.display !== 'none';
+    
+    if (isPreviewVisible) {
+        previewEl.style.display = 'none';
+        entryTextEl.style.display = 'block';
+        togglePreviewBtn.textContent = '👁 Preview';
+    } else {
+        previewEl.innerHTML = renderMarkdown(entryTextEl.value);
+        previewEl.style.display = 'block';
+        entryTextEl.style.display = 'none';
+        togglePreviewBtn.textContent = '✏ Edit';
+    }
+}
+
+// Toolbar formatting
+function insertMarkdown(format) {
+    const start = entryTextEl.selectionStart;
+    const end = entryTextEl.selectionEnd;
+    const selectedText = entryTextEl.value.substring(start, end);
+    let replacement = '';
+    
+    switch(format) {
+        case 'bold':
+            replacement = `**${selectedText || 'bold text'}**`;
+            break;
+        case 'italic':
+            replacement = `*${selectedText || 'italic text'}*`;
+            break;
+        case 'heading':
+            replacement = `# ${selectedText || 'heading'}`;
+            break;
+        case 'list':
+            replacement = `- ${selectedText || 'list item'}`;
+            break;
+    }
+    
+    entryTextEl.value = entryTextEl.value.substring(0, start) + replacement + entryTextEl.value.substring(end);
+    entryTextEl.focus();
+    entryTextEl.setSelectionRange(start + replacement.length, start + replacement.length);
+    saveCurrentEntry();
+}
+
+// Export functionality
+function exportAsTxt() {
+    let content = '🌸 Sakura Diary Export 🌸\n';
+    content += '='.repeat(50) + '\n\n';
+    
+    entries.forEach((entry, index) => {
+        content += `Entry ${index + 1}\n`;
+        content += `Date: ${new Date(entry.date).toLocaleDateString()}\n`;
+        content += `Title: ${entry.title || 'Untitled'}\n`;
+        content += '-'.repeat(50) + '\n';
+        content += entry.text + '\n\n';
+        content += '='.repeat(50) + '\n\n';
+    });
+    
+    downloadFile(content, 'sakura-diary.txt', 'text/plain');
+}
+
+function exportAsJson() {
+    const jsonContent = JSON.stringify(entries, null, 2);
+    downloadFile(jsonContent, 'sakura-diary.json', 'application/json');
+}
+
+function downloadFile(content, filename, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    exportMenu.style.display = 'none';
+}
+
+function toggleExportMenu() {
+    exportMenu.style.display = exportMenu.style.display === 'none' ? 'flex' : 'none';
+}
 
 // Initialize the diary
 function init() {

@@ -67,6 +67,54 @@ header h1 {
     font-style: italic;
 }
 
+/* Search Bar */
+.search-bar {
+    position: relative;
+    margin-bottom: 25px;
+    animation: slideUp 0.8s ease-out;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 15px 45px 15px 20px;
+    border: 2px solid #ffb3d9;
+    border-radius: 30px;
+    font-size: 1em;
+    outline: none;
+    transition: all 0.3s;
+    background: white;
+    box-shadow: 0 4px 15px rgba(214, 51, 132, 0.1);
+}
+
+.search-bar input:focus {
+    border-color: #d63384;
+    box-shadow: 0 6px 20px rgba(214, 51, 132, 0.2);
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff6b9d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-clear-search:hover {
+    background: #ff4081;
+    transform: translateY(-50%) scale(1.1);
+}
+
 .diary-card {
     background: white;
     border-radius: 20px;
@@ -143,6 +191,107 @@ header h1 {
     font-style: italic;
 }
 
+/* Editor Toolbar */
+.editor-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 15px;
+    background: #ffe0f0;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.toolbar-btn {
+    padding: 8px 14px;
+    border: 2px solid #ffb3d9;
+    border-radius: 8px;
+    background: white;
+    color: #d63384;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.95em;
+}
+
+.toolbar-btn:hover {
+    background: #d63384;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.toolbar-btn:active {
+    transform: translateY(0);
+}
+
+/* Markdown Preview */
+.markdown-preview {
+    width: 100%;
+    min-height: 300px;
+    padding: 20px 15px;
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.8;
+    background: #fafafa;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.markdown-preview h1 {
+    color: #d63384;
+    font-size: 2em;
+    margin: 15px 0;
+}
+
+.markdown-preview h2 {
+    color: #d63384;
+    font-size: 1.6em;
+    margin: 12px 0;
+}
+
+.markdown-preview h3 {
+    color: #d63384;
+    font-size: 1.3em;
+    margin: 10px 0;
+}
+
+.markdown-preview ul {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.markdown-preview li {
+    margin: 5px 0;
+    color: #333;
+}
+
+.markdown-preview strong {
+    color: #d63384;
+    font-weight: 700;
+}
+
+.markdown-preview em {
+    color: #c2185b;
+    font-style: italic;
+}
+
+.btn-toggle-preview {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ffb3d9, #ffc9e3);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-toggle-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
+}
+
 .diary-footer {
     display: flex;
     flex-direction: column;
@@ -204,6 +353,53 @@ header h1 {
     flex: 1;
 }
 
+.btn-export {
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    color: white;
+    flex: 1;
+}
+
+/* Export Menu */
+.export-menu {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 15px;
+    background: #ffe0f0;
+    border-radius: 15px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.btn-export-option {
+    padding: 10px 20px;
+    border: 2px solid #d63384;
+    border-radius: 20px;
+    background: white;
+    color: #d63384;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+}
+
+.btn-export-option:hover {
+    background: #d63384;
+    color: white;
+    transform: translateY(-2px);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -240,6 +436,10 @@ header h1 {
         font-size: 0.95em;
     }
     
+    .search-bar {
+        margin-bottom: 20px;
+    }
+    
     .diary-card {
         padding: 20px;
     }
@@ -259,11 +459,24 @@ header h1 {
         font-size: 1em;
     }
     
+    .editor-toolbar {
+        flex-wrap: wrap;
+    }
+    
+    .toolbar-btn {
+        flex: 1;
+        min-width: 60px;
+    }
+    
     .controls {
         flex-direction: column;
     }
     
     .action-buttons {
+        flex-direction: column;
+    }
+    
+    .export-menu {
         flex-direction: column;
     }
     

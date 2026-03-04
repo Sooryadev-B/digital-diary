@@ -15,6 +15,11 @@
             <p class="subtitle">Your personal space for thoughts and memories</p>
         </header>
         
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search entries by title or date..." />
+            <button id="clearSearchBtn" class="btn-clear-search" style="display: none;">✕</button>
+        </div>
+        
         <div class="diary-card">
             <div class="diary-header">
                 <div class="date-display" id="currentDate"></div>
@@ -23,7 +28,15 @@
             
             <div class="diary-content">
                 <input type="text" id="entryTitle" class="entry-title" placeholder="Entry Title...">
-                <textarea id="entryText" class="entry-text" placeholder="Write your thoughts here..."></textarea>
+                <div class="editor-toolbar">
+                    <button class="toolbar-btn" data-format="bold" title="Bold (Ctrl+B)">B</button>
+                    <button class="toolbar-btn" data-format="italic" title="Italic (Ctrl+I)">I</button>
+                    <button class="toolbar-btn" data-format="heading" title="Heading">H</button>
+                    <button class="toolbar-btn" data-format="list" title="List">•</button>
+                </div>
+                <textarea id="entryText" class="entry-text" placeholder="Write your thoughts here... (Markdown supported: **bold**, *italic*, # heading, - list)"></textarea>
+                <div id="preview" class="markdown-preview" style="display: none;"></div>
+                <button id="togglePreviewBtn" class="btn-toggle-preview">👁 Preview</button>
             </div>
             
             <div class="diary-footer">
@@ -38,6 +51,11 @@
                 <div class="action-buttons">
                     <button id="addPageBtn" class="btn btn-add">+ New Entry</button>
                     <button id="deletePageBtn" class="btn btn-delete" disabled>🗑 Delete</button>
+                    <button id="exportBtn" class="btn btn-export">📥 Export</button>
+                </div>
+                <div id="exportMenu" class="export-menu" style="display: none;">
+                    <button id="exportTxtBtn" class="btn btn-export-option">Export as TXT</button>
+                    <button id="exportJsonBtn" class="btn btn-export-option">Export as JSON</button>
                 </div>
             </div>
         </div>
